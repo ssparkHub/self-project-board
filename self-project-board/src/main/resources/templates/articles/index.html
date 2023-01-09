@@ -7,10 +7,7 @@
 
 <body>
 
-    <header>
-        header 삽입부
-        <hr>
-    </header>
+    <header th:replace="header :: header"></header>
 
     <main>
         <form>
@@ -74,9 +71,7 @@
 
     </main>
 
-    <footer>
-        <hr>
-        footer 삽입부
+    <footer th:replace="footer :: footer">
     </footer>
 
 
