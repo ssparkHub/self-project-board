@@ -23,7 +23,7 @@ public class AuditingFields {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @CreatedBy
     @Column(nullable = false, updatable = false, length = 100)
