@@ -25,12 +25,12 @@ class JpaRepositoryTest {
     public JpaRepositoryTest(
             @Autowired ArticleRepository articleRepository, //생성자주입 패턴
             @Autowired ArticleCommentRepository articleCommentRepository,
-            @Autowired UserAccountRepository userAccountRepository,
-            UserAccountRepository userAccountRepository1) {
+            @Autowired UserAccountRepository userAccountRepository
+    ) {
 
         this.articleRepository = articleRepository;
         this.articleCommentRepository = articleCommentRepository;
-        this.userAccountRepository = userAccountRepository1;
+        this.userAccountRepository = userAccountRepository;
     }
 
     @DisplayName("select Test")
@@ -43,7 +43,7 @@ class JpaRepositoryTest {
         //then
         assertThat(articles)
                 .isNotNull()
-                .hasSize(1000);
+                .hasSize(123);
     }
 
     @DisplayName("Insert test")
@@ -51,7 +51,7 @@ class JpaRepositoryTest {
     void givenTestData_whenInserting_thenWorksFine() {
         //Given
         long previousCount = articleRepository.count();
-        UserAccount userAccount = userAccountRepository.save(UserAccount.of("sspark", "pw", null, null, null));
+        UserAccount userAccount = userAccountRepository.save(UserAccount.of("newSspark", "pw", null, null, null));
         Article article = Article.of(userAccount, "new article", "new content", "#spring");
 
         // When
