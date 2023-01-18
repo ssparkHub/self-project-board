@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,6 +70,51 @@ class ArticleServiceTest {
 
     }
 
+    @DisplayName("검색어 없이 게시글을 해시태그 검색하면, 게시글 페이지를 반환한다.")
+    @Test
+    void givenOnlyHashtag_whenSearchingArticlesViaHashtag_thenReturnsArticlePage() {
+        //Given
+        Pageable pageable = Pageable.ofSize(20);
+
+        //When
+        Page<ArticleDto> articles = sut.searchArticlesViaHashtag(null, pageable);
+        //Page 안에 paging, sorting 기능이 포함되어있다.
+        //Then
+        assertThat(articles).isEmpty(); //== .isEqualTo(Page.empty(pageable));
+        then(articleRepository).shouldHaveNoInteractions();
+
+    }
+
+    @DisplayName("게시글을 해시태그 검색하면, 게시글 페이지를 반환한다.")
+    @Test
+    void givenHashtag_whenSearchingArticlesViaHashtag_thenReturnsArticlePage() {
+        //Given
+        String hashtag = "#java";
+        Pageable pageable = Pageable.ofSize(20);
+        given(articleRepository.findByHashtag(hashtag,pageable)).willReturn(Page.empty(pageable));
+
+        //When
+        Page<ArticleDto> articles = sut.searchArticlesViaHashtag(hashtag, pageable);
+        //Page 안에 paging, sorting 기능이 포함되어있다.
+        //Then
+        assertThat(articles).isEmpty();
+        then(articleRepository).should().findByHashtag(hashtag,pageable);
+
+    }
+
+    @DisplayName("게시글을 해시태그 검색하면, 게시글 페이지를 반환한다.")
+    @Test
+    void givenNothing_whenCalling_thenReturnsHashtags() {
+        //Given
+        List<String> expectedHashtags = List.of("#java","#spring","#boot");
+        given(articleRepository.findAllDistinctHashtags()).willReturn(expectedHashtags);
+
+        //When
+        List<String> actualHashtags = sut.getHashtags();
+        //Then
+        assertThat(actualHashtags).isEqualTo(expectedHashtags);
+        then(articleRepository).should().findAllDistinctHashtags();
+    }
 
     @DisplayName("게시글을 조회하면, 게시글을 반환한다.")
     @Test
@@ -151,7 +197,6 @@ class ArticleServiceTest {
         // Then
         then(articleRepository).should().getReferenceById(dto.id());
     }
-
 
     @DisplayName("게시글의 ID를 입력하면, 게시글을 삭제한다")
     @Test
