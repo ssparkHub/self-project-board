@@ -4,6 +4,7 @@ import com.example.selfprojectboard.domain.Article;
 import com.example.selfprojectboard.domain.QArticle;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+
 import java.util.List;
 
 public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport implements ArticleRepositoryCustom { //interface name + Impl은 약속이다
@@ -19,7 +20,7 @@ public class ArticleRepositoryCustomImpl extends QuerydslRepositorySupport imple
 
         return from(article)
                 .distinct()
-                .select(article.hashtag)
+                .select(article.hashtag) // 특정한 하나의 컬럼을 지정가능
                 .where(article.hashtag.isNotNull())
                 .fetch();
 

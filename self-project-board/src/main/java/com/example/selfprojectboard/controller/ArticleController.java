@@ -1,7 +1,6 @@
 package com.example.selfprojectboard.controller;
 
 import com.example.selfprojectboard.domain.type.SearchType;
-import com.example.selfprojectboard.repository.ArticleCommentRepository;
 import com.example.selfprojectboard.response.ArticleResponse;
 import com.example.selfprojectboard.response.ArticleWithCommentsResponse;
 import com.example.selfprojectboard.service.ArticleService;
@@ -59,6 +58,16 @@ public class ArticleController {
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             ModelMap map
     ) {
+        Page<ArticleResponse> articles = articleService.searchArticlesViaHashtag(searchValue, pageable).map(ArticleResponse::from);
+        List<Integer> barNumbers = paginationService.getPaginationBarNumbers(pageable.getPageNumber(), articles.getTotalPages());
+        List<String> hashtags = articleService.getHashtags();
+
+        map.addAttribute("articles", articles);
+        map.addAttribute("hashtags", hashtags);
+        map.addAttribute("paginationBarNumbers", barNumbers);
+        map.addAttribute("searchType", SearchType.HASHTAG);
+
+
         return "articles/search-hashtag";
     }
 }

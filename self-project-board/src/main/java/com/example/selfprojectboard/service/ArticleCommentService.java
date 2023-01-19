@@ -4,12 +4,12 @@ import com.example.selfprojectboard.domain.ArticleComment;
 import com.example.selfprojectboard.dto.ArticleCommentDto;
 import com.example.selfprojectboard.repository.ArticleCommentRepository;
 import com.example.selfprojectboard.repository.ArticleRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Slf4j
