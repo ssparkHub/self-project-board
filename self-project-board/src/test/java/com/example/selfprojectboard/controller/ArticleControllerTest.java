@@ -4,7 +4,7 @@ import com.example.selfprojectboard.config.SecurityConfig;
 import com.example.selfprojectboard.domain.constant.FormStatus;
 import com.example.selfprojectboard.domain.constant.SearchType;
 import com.example.selfprojectboard.dto.ArticleDto;
-import com.example.selfprojectboard.dto.ArticleRequest;
+import com.example.selfprojectboard.dto.request.ArticleRequest;
 import com.example.selfprojectboard.dto.ArticleWithCommentsDto;
 import com.example.selfprojectboard.dto.UserAccountDto;
 import com.example.selfprojectboard.response.ArticleResponse;
@@ -115,10 +115,8 @@ class ArticleControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML))
                 .andExpect(view().name("articles/detail"))
                 .andExpect(model().attributeExists("article"))
-                .andExpect(model().attributeExists("articleComments"))
-                .andExpect(model().attribute("totalCount", totalCount));
+                .andExpect(model().attributeExists("articleComments"));
         then(articleService).should().getArticleWithComments(articleId);
-        then(articleService).should().getArticleCount();
     }
 
     @DisplayName("[view][GET] 게시글 리스트 (게시판) 페이지 - 페이징, 정렬 기능")
@@ -130,7 +128,7 @@ class ArticleControllerTest {
         int pageNumber = 0;
         int pageSize = 5;
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Order.desc(sortName)));
-        List<Integer> barNumbers = List.of(Sspark, 2, 3, 4, 5);
+        List<Integer> barNumbers = List.of(1, 2, 3, 4, 5);
         given(articleService.searchArticles(null, null, pageable)).willReturn(Page.empty());
         given(paginationService.getPaginationBarNumbers(pageable.getPageNumber(), Page.empty().getTotalPages())).willReturn(barNumbers);
 
@@ -168,7 +166,7 @@ class ArticleControllerTest {
         //Given
         List<String> hashtags = List.of("#java", "#spring", "#boot" );
         given(articleService.searchArticlesViaHashtag(eq(null), any(Pageable.class))).willReturn(Page.empty());
-        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(Sspark,2,3,4,5));
+        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(1,2,3,4,5));
         given(articleService.getHashtags()).willReturn(List.of("#java", "#spring", "#boot" ));
         //When & Then
         mvc.perform(get("/articles/search-hashtag"))
@@ -191,7 +189,7 @@ class ArticleControllerTest {
         String hashtag = "#java";
         List<String> hashtags = List.of("#java", "#spring", "#boot" );
         given(articleService.searchArticlesViaHashtag(eq(hashtag), any(Pageable.class))).willReturn(Page.empty());
-        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(Sspark,2,3,4,5));
+        given(paginationService.getPaginationBarNumbers(anyInt(), anyInt())).willReturn(List.of(1,2,3,4,5));
         given(articleService.getHashtags()).willReturn(List.of("#java", "#spring", "#boot" ));
         //When & Then
         mvc.perform(
