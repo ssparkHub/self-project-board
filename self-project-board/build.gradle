@@ -31,7 +31,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	// gradle
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5' // Spring Boot 2.7
-	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6' // Spring Boot 3.0.1
+//	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6' // Spring Boot 3.0.1
 
 	runtimeOnly 'com.h2database:h2'
 	runtimeOnly 'mysql:mysql-connector-java'
