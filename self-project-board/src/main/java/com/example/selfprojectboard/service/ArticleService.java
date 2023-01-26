@@ -65,9 +65,13 @@ public class ArticleService {
         try{
 
             Article article = articleRepository.getReferenceById(articleId);
-            if(dto.title() != null) { article.setTitle(dto.title());}
-            if(dto.content() != null) {article.setContent(dto.content());}
-            article.setHashtag(dto.hashtag());
+            UserAccount userAccount = userAccountRepository.getReferenceById(dto.userAccountDto().userId());
+
+            if(article.getUserAccount().equals(userAccount)){
+                if(dto.title() != null) { article.setTitle(dto.title());}
+                if(dto.content() != null) {article.setContent(dto.content());}
+                article.setHashtag(dto.hashtag());
+            }
             //@Transactional로 묶여있기때문에 영속성 변경을 감지하기 때문에 save가 따로 필요없다
         } catch (EntityNotFoundException e) {
             log.warn("게시판 업데이트 실패, 게시글을 찾을 수 없습니다 - dto: {}", dto);
@@ -75,8 +79,8 @@ public class ArticleService {
             // "~~" + dto 로 작성할땐 로그를 찍지않아도 될때에도 dto에 메모리를 쓰지않는다
         }
     }
-    public void deleteArticle(long articleId) {
-        articleRepository.deleteById(articleId);
+    public void deleteArticle(long articleId, String userId) {
+        articleRepository.deleteByIdAndUserAccount_UserId(articleId, userId);
 
     }
 

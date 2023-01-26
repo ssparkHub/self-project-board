@@ -1,9 +1,13 @@
 package com.example.selfprojectboard.config;
 
+import com.example.selfprojectboard.dto.security.BoardPrincipal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
@@ -13,6 +17,11 @@ public class JpaConfig {
 
     @Bean
     public AuditorAware<String> auditorAware() {
-        return () -> Optional.of("sspark"); //TODO : 임의데이터 ->스프링 시큐리티로 인증기능을 붙이게 될 때 수정.
+        return () -> Optional.ofNullable(SecurityContextHolder.getContext())
+                .map(SecurityContext::getAuthentication)
+                .filter(Authentication::isAuthenticated)
+                .map(Authentication::getPrincipal)
+                .map(x -> (BoardPrincipal) x) // => .map(BoardPrincipal.class::cast)
+                .map(BoardPrincipal::getUsername);
     }
 }
